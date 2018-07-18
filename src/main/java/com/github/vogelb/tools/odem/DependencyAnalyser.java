@@ -14,6 +14,7 @@ import com.github.vogelb.tools.odem.model.Container;
 import com.github.vogelb.tools.odem.model.Dependency;
 import com.github.vogelb.tools.odem.model.DependencyGraph;
 import com.github.vogelb.tools.odem.model.Type;
+import com.github.vogelb.tools.odem.model.TypeMap;
 import com.github.vogelb.tools.odem.model.DependencyGraph.GraphElement;
 
 public class DependencyAnalyser {

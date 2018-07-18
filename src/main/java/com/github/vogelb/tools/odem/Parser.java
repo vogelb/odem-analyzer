@@ -17,6 +17,7 @@ import org.xml.sax.SAXException;
 import com.github.vogelb.tools.odem.model.Container;
 import com.github.vogelb.tools.odem.model.Dependency;
 import com.github.vogelb.tools.odem.model.Type;
+import com.github.vogelb.tools.odem.model.TypeMap;
 
 public class Parser {
 

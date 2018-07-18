@@ -1,19 +1,14 @@
-package com.github.vogelb.tools.odem;
+package com.github.vogelb.tools.odem.model;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.github.vogelb.tools.odem.model.Container;
-import com.github.vogelb.tools.odem.model.Type;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class TypeMap {
 	private List<Container> containers = new ArrayList<Container>();
 	private Map<String, String> types = new HashMap<String, String>();
-	
 	
 	public void add(Container container) {
 		containers.add(container);
