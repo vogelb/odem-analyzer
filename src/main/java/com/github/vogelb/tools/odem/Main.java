@@ -21,9 +21,9 @@ public class Main {
         String ignorePackageFilter = "java.*";
 
         // Set graphic properties for package nodes
-        GraphElement[] graphProps = { 
+        GraphElement[] graphProps = {
                 new GraphElement("odem", new Color(255, 153, 0), 1),
-                new GraphElement("odem.model", new Color(0, 153, 204), 1) 
+                new GraphElement("odem.model", new Color(0, 153, 204), 1)
         };
 
         // Use odem file in resources
@@ -33,12 +33,11 @@ public class Main {
         DependencyAnalyser analyser = new DependencyAnalyser("odem-analyzer.odem", in);
 
         // Create dependency graph
-        DependencyGraph graph = 
-                analyser.filter(packageFilter)
-                .SetGraphicProperties(graphProps)
-                .IncludePackageFilter(packageFilter)
-                .SetIncludePackageDependencies(false)
-                .IgnorePackageFilter(ignorePackageFilter)
+        DependencyGraph graph = analyser.filter(packageFilter)
+                .setGraphicProperties(graphProps)
+                .includePackageFilter(packageFilter)
+                .setIncludePackageDependencies(false)
+                .ignorePackageFilter(ignorePackageFilter)
                 .buildGraph("com.github.vogelb.tools");
         // Export graph as graphviz DOT file (issue "dot -Tpng -O
         // odem-analyzer.dot" to create a png image)
@@ -49,19 +48,17 @@ public class Main {
         }
 
         // Export Outgoing dependencies
-        List<Dependency> guiDependencies = 
-                analyser.filter("com.github.vogelb.tools.*")
-                .IncludePackageFilter(packageFilter)
-                .IgnorePackageFilter(ignorePackageFilter)
+        List<Dependency> guiDependencies = analyser.filter("com.github.vogelb.tools.*")
+                .includePackageFilter(packageFilter)
+                .ignorePackageFilter(ignorePackageFilter)
                 .getDependenciesFrom();
         CsvExporter.exportDependencies(guiDependencies, "odem-analyzer-dependencies.csv",
                 "com.github.vogelb.tools.odem.*");
 
         // Export Incoming dependencies for the model namespace
-        List<Dependency> dependencies = 
-                analyser.filter("com.github.vogelb.tools.odem.model.*")
-                .IncludePackageFilter(packageFilter)
-                .IgnorePackageFilter(ignorePackageFilter)
+        List<Dependency> dependencies = analyser.filter("com.github.vogelb.tools.odem.model.*")
+                .includePackageFilter(packageFilter)
+                .ignorePackageFilter(ignorePackageFilter)
                 .getDependenciesTo();
         CsvExporter.exportDependencies(dependencies, "odem-analyzer-model-dependents.csv",
                 "com.github.vogelb.tools.odem.*");

@@ -52,7 +52,7 @@ public class DependencyFilter {
      * @return a filter that will only accept dependencies to the given
      *         containers
      */
-    public DependencyFilter IncludeContainerFilter(String includeContainerFilter) {
+    public DependencyFilter includeContainerFilter(String includeContainerFilter) {
         this.includeContainerFilter = includeContainerFilter;
         return this;
     }
@@ -64,7 +64,7 @@ public class DependencyFilter {
      *            The filter expression
      * @return a filter that will ignore dependencies from the given containers
      */
-    public DependencyFilter IgnoreContainerFilter(String ignoreContainerFilter) {
+    public DependencyFilter ignoreContainerFilter(String ignoreContainerFilter) {
         this.ignoreContainerFilter = ignoreContainerFilter;
         return this;
     }
@@ -76,7 +76,7 @@ public class DependencyFilter {
      *            The filter expression
      * @return a filter that will include dependencies from the given packages
      */
-    public DependencyFilter IncludePackageFilter(String includePackageFilter) {
+    public DependencyFilter includePackageFilter(String includePackageFilter) {
         this.includePackageFilter = includePackageFilter;
         return this;
     }
@@ -88,7 +88,7 @@ public class DependencyFilter {
      *            The filter expression
      * @return a filter that will ignore dependencies from the given packages
      */
-    public DependencyFilter IgnorePackageFilter(String ignorePackageFilter) {
+    public DependencyFilter ignorePackageFilter(String ignorePackageFilter) {
         this.ignorePackageFilter = ignorePackageFilter;
         return this;
     }
@@ -102,7 +102,7 @@ public class DependencyFilter {
      *         package when set to true and ignore them otherwise. The default
      *         setting is true.
      */
-    public DependencyFilter SetIncludePackageDependencies(boolean includePackageDependencies) {
+    public DependencyFilter setIncludePackageDependencies(boolean includePackageDependencies) {
         includeInternalDependencies = includePackageDependencies;
         return this;
     }
@@ -114,7 +114,7 @@ public class DependencyFilter {
      *            The graphical properties
      * @return The filter
      */
-    public DependencyFilter SetGraphicProperties(GraphElement[] graphProps) {
+    public DependencyFilter setGraphicProperties(GraphElement[] graphProps) {
         graphProperties = new HashMap<>();
         for (GraphElement e : graphProps) {
             graphProperties.put(e.name, e);
@@ -122,7 +122,7 @@ public class DependencyFilter {
         return this;
     }
 
-    private GraphElement GetGraphicProperties(String name, String packagePrefix) {
+    private GraphElement getGraphicProperties(String name, String packagePrefix) {
         if (graphProperties == null)
             return null;
         GraphElement result = graphProperties.get(getTopLevelPackage(name, packagePrefix));
@@ -174,8 +174,8 @@ public class DependencyFilter {
                 System.out.println("\nProcessing dependencies for package " + fromPackage);
                 deps.stream().collect(Collectors.groupingBy(d -> d.getPackage(), Collectors.counting()))
                         .forEach((toPackage, numberOfDependencies) -> result.addDependency(
-                                GetGraphicProperties(fromPackage, packagePrefix),
-                                GetGraphicProperties(toPackage, packagePrefix), numberOfDependencies));
+                                getGraphicProperties(fromPackage, packagePrefix),
+                                getGraphicProperties(toPackage, packagePrefix), numberOfDependencies));
             }
         }
 
