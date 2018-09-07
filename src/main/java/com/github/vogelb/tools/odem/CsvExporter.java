@@ -8,10 +8,11 @@ import java.util.List;
 import com.github.vogelb.tools.odem.model.Dependency;
 
 /**
- * Export dependencies to CSV format. 
+ * Export dependencies to CSV format.
  */
 public class CsvExporter {
-    public static void exportDependencies(List<Dependency> dependencies, final String outputFile, final String packagePrefix) {
+    public static void exportDependencies(List<Dependency> dependencies, final String outputFile,
+            final String packagePrefix) {
         try (PrintWriter out = new PrintWriter(new FileWriter(outputFile))) {
             out.println(
                     "Container;TopLevelPackage;Package;Class;DependencyType;DependencyContainer;DependencyTopLevelPackage;DependencyPackage;Dependency");
@@ -19,15 +20,13 @@ public class CsvExporter {
                 String containerName = dependency.getParent().getParent().getShortName();
                 String packageName = dependency.getParent().getPackage();
                 String topLevelPackage = packageName.startsWith(packagePrefix)
-                        ? packageName.substring(packagePrefix.length())
-                        : packageName;
+                        ? packageName.substring(packagePrefix.length()) : packageName;
                 int tlpIndex = topLevelPackage.indexOf('.');
                 topLevelPackage = tlpIndex > 0 ? topLevelPackage.substring(0, tlpIndex) : topLevelPackage;
                 String dependencyContainer = dependency.getParent().getParent().getShortName();
                 String dependencyPackageName = dependency.getPackage();
                 String dependencyTopLevelPackage = dependencyPackageName.startsWith(packagePrefix)
-                        ? dependencyPackageName.substring(packagePrefix.length())
-                        : dependencyPackageName;
+                        ? dependencyPackageName.substring(packagePrefix.length()) : dependencyPackageName;
                 int dTlpIndex = dependencyTopLevelPackage.indexOf('.');
                 dependencyTopLevelPackage = dTlpIndex > 0 ? dependencyTopLevelPackage.substring(0, dTlpIndex)
                         : dependencyTopLevelPackage;
