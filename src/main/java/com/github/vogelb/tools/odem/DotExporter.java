@@ -11,6 +11,10 @@ import java.util.List;
 import com.github.vogelb.tools.odem.model.DependencyGraph;
 import com.github.vogelb.tools.odem.model.DependencyGraph.GraphElement;
 
+/**
+ * Simple exporter for .dot files.<br/>
+ * Use with https://www.graphviz.org/ DOT to create dependency graphs.
+ */
 public class DotExporter {
     public static void exportDependencyGraph(DependencyGraph graph, GraphElement[] graphProps, String fileName)
             throws IOException {

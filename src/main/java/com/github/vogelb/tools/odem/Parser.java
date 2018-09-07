@@ -1,7 +1,7 @@
 package com.github.vogelb.tools.odem;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,14 +19,19 @@ import com.github.vogelb.tools.odem.model.Dependency;
 import com.github.vogelb.tools.odem.model.Type;
 import com.github.vogelb.tools.odem.model.TypeMap;
 
+/**
+ * ODEM file parser.
+ */
 public class Parser {
 
-	public TypeMap parse(String odemFile) {
+	/**
+	 * Parse the given ODEM file 
+	 * @param odemFile the file path
+	 * @return the parsed type map.
+	 */
+	public TypeMap parse(String input, InputStream in) {
 		TypeMap containers = new TypeMap();
-		FileInputStream in = null;
 		try {
-			in = new FileInputStream(odemFile);
-
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setValidating(false);
 			DocumentBuilder db = dbf.newDocumentBuilder();
@@ -39,7 +44,7 @@ public class Parser {
 			}
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			throw new RuntimeException("Error parsing odem file " + odemFile, e);
+			throw new RuntimeException("Error parsing odem file " + input, e);
 		} finally {
 			if (in != null) {
 				try {
@@ -53,7 +58,7 @@ public class Parser {
 		return containers;
 	}
 
-	private Container importContainer(Node containerNode) {
+	private static Container importContainer(Node containerNode) {
 		Container container = new Container(containerNode.getAttributes().getNamedItem("name").getNodeValue());
 
 		NodeList typeNodes = ((Element) containerNode).getElementsByTagName("type");
@@ -65,7 +70,7 @@ public class Parser {
 		return container;
 	}
 
-	private Type importType(Node typeNode) {
+	private static Type importType(Node typeNode) {
 		String typeName = typeNode.getAttributes().getNamedItem("name").getNodeValue();
 		if (typeName.startsWith("WEB-INF.classes.")) {
 			typeName = typeName.substring("WEB-INF.classes.".length());

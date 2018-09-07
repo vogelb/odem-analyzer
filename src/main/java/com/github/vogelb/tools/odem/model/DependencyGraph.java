@@ -3,7 +3,9 @@ package com.github.vogelb.tools.odem.model;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DependencyGraph {
     
@@ -48,29 +50,35 @@ public class DependencyGraph {
         }
     }
     
-    private List<GraphElement> elements = new ArrayList<>();
+    private Map<String, GraphElement> elements = new HashMap<>();
     
     public GraphElement addElement(String name, int weight, Color color) {
         GraphElement element = new GraphElement(name, color, weight);
-        elements.add(element);
+        elements.put(element.name, element);
         return element;
     }
     
     public GraphElement addElement(GraphElement element) {
-        elements.add(element);
+        elements.put(element.name, element);
         return element;
     }
     
     public void addDependency(GraphElement a, GraphElement b, long weight) {
-        if (!elements.contains(a)) elements.add(a);
-        if (!elements.contains(b)) elements.add(b);
-        Dependency d = new Dependency(a, b, weight);
-        a.dependencies.add(d);
+    	GraphElement aa = elements.get(a.name);
+    	if (aa == null) {
+    		aa = addElement(a);
+    	}
+    	GraphElement  bb = elements.get(b.name);
+    	if (bb == null) {
+    		bb = addElement(b);
+    	}
+        Dependency d = new Dependency(aa, bb, weight);
+        aa.dependencies.add(d);
         System.out.println(String.format("Added dependency %s -> %s [%d]", a.name, b.name, weight));
     }
     
     public Iterable<GraphElement> getElements() {
-        return Collections.unmodifiableList(elements);
+        return Collections.unmodifiableList(new ArrayList<>(elements.values()));
     }
 
 }

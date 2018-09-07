@@ -7,6 +7,9 @@ import java.util.List;
 
 import com.github.vogelb.tools.odem.model.Dependency;
 
+/**
+ * Export dependencies to CSV format. 
+ */
 public class CsvExporter {
     public static void exportDependencies(List<Dependency> dependencies, final String outputFile, final String packagePrefix) {
         try (PrintWriter out = new PrintWriter(new FileWriter(outputFile))) {
