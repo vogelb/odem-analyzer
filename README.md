@@ -7,4 +7,4 @@
 - Create .DOT dependency graphs
 
 ## Usage
-Adapt the included sample Main class to your needs.
+Adapt the included sample [Main](https://github.com/vogelb/odem-analyzer/blob/master/src/main/java/com/github/vogelb/tools/odem/Main.java) class to your needs.
