@@ -1,6 +1,6 @@
 package com.github.vogelb.tools.odem.model;
 
-import com.github.vogelb.tools.odem.PackageUtil;
+import com.github.vogelb.tools.odem.Components;
 
 public class Dependency {
 	private Type parent;
@@ -42,7 +42,7 @@ public class Dependency {
 		return result.toString();
 	}
 
-    public String getTopLevelPackage(ToplevelPackage[] tlps) {
-        return PackageUtil.getTopLevelPackage(getName(), tlps);
+    public String getTopLevelPackage() {
+        return Components.getComponent(getName());
     }
 }

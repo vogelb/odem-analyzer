@@ -13,10 +13,9 @@ import java.util.stream.Collectors;
 import com.github.vogelb.tools.odem.model.Container;
 import com.github.vogelb.tools.odem.model.Dependency;
 import com.github.vogelb.tools.odem.model.DependencyGraph;
+import com.github.vogelb.tools.odem.model.DependencyGraph.GraphElement;
 import com.github.vogelb.tools.odem.model.Type;
 import com.github.vogelb.tools.odem.model.TypeMap;
-import com.github.vogelb.tools.odem.model.DependencyGraph.GraphElement;
-import com.github.vogelb.tools.odem.model.ToplevelPackage;
 
 /**
  * Filter given dependency containers according configurable criteria.
@@ -139,7 +138,7 @@ public class DependencyFilter {
      * @param tlps
      * @return
      */
-    public DependencyGraph buildGraph(ToplevelPackage[] tlps) {
+    public DependencyGraph buildGraph() {
 
         DependencyGraph result = new DependencyGraph();
         if (graphProperties != null) {
@@ -170,12 +169,12 @@ public class DependencyFilter {
                             && (includeInternalDependencies || d.getName().matches(basePathFilter));
                     return result;
                 }
-            }).collect(Collectors.groupingBy(d -> d.getParent().getTopLevelPackage(tlps)));
+            }).collect(Collectors.groupingBy(d -> d.getParent().getTopLevelPackage()));
 
             for (String fromPackage : grouped.keySet()) {
                 List<Dependency> deps = grouped.get(fromPackage);
                 System.out.println("\nProcessing dependencies for package " + fromPackage);
-                deps.stream().collect(Collectors.groupingBy(d -> d.getTopLevelPackage(tlps), Collectors.counting()))
+                deps.stream().collect(Collectors.groupingBy(d -> d.getTopLevelPackage(), Collectors.counting()))
                         .forEach((toPackage, numberOfDependencies) -> result.addDependency(
                                 getGraphicProperties(fromPackage),
                                 getGraphicProperties(toPackage), numberOfDependencies));

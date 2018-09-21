@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.github.vogelb.tools.odem.PackageUtil;
+import com.github.vogelb.tools.odem.Components;
 
 public class Type {
 	private Container parent;
@@ -75,7 +75,7 @@ public class Type {
         return name;
     }
 	
-	public String getTopLevelPackage(ToplevelPackage[] tlps) {
-        return PackageUtil.getTopLevelPackage(getName(), tlps);
+	public String getTopLevelPackage() {
+        return Components.getComponent(getName());
     }
 }
