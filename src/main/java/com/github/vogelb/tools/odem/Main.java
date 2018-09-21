@@ -1,6 +1,5 @@
 package com.github.vogelb.tools.odem;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -35,8 +34,7 @@ public class Main {
 
         try {
             // Use odem file in resources
-            // InputStream in = Main.class.getClassLoader().getResourceAsStream("odem-analyzer.odem");
-            InputStream in = new FileInputStream("C:/dev/eclipse/poslive-master/POSLive.odem");
+            InputStream in = Main.class.getClassLoader().getResourceAsStream("odem-analyzer.odem");
 
             // Load and parse odem file
             DependencyAnalyser analyser = new DependencyAnalyser("POSLive.odem", in);
