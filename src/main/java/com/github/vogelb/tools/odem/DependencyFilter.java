@@ -16,6 +16,7 @@ import com.github.vogelb.tools.odem.model.DependencyGraph;
 import com.github.vogelb.tools.odem.model.Type;
 import com.github.vogelb.tools.odem.model.TypeMap;
 import com.github.vogelb.tools.odem.model.DependencyGraph.GraphElement;
+import com.github.vogelb.tools.odem.model.ToplevelPackage;
 
 /**
  * Filter given dependency containers according configurable criteria.
@@ -122,12 +123,12 @@ public class DependencyFilter {
         return this;
     }
 
-    private GraphElement getGraphicProperties(String name, String packagePrefix) {
+    private GraphElement getGraphicProperties(String name) {
         if (graphProperties == null)
             return null;
-        GraphElement result = graphProperties.get(getTopLevelPackage(name, packagePrefix));
+        GraphElement result = graphProperties.get(name);
         if (result == null) {
-            result = new GraphElement(getTopLevelPackage(name, packagePrefix), getRandomColor(), 1);
+            result = new GraphElement(name, getRandomColor(), 1);
         }
         return result;
     }
@@ -135,10 +136,10 @@ public class DependencyFilter {
     /**
      * Build the dependency graph.
      * 
-     * @param packagePrefix
+     * @param tlps
      * @return
      */
-    public DependencyGraph buildGraph(String packagePrefix) {
+    public DependencyGraph buildGraph(ToplevelPackage[] tlps) {
 
         DependencyGraph result = new DependencyGraph();
         if (graphProperties != null) {
@@ -162,20 +163,22 @@ public class DependencyFilter {
             Map<String, List<Dependency>> grouped = c.getDependencies().stream().filter(new Predicate<Dependency>() {
                 @Override
                 public boolean test(Dependency d) {
-                    return d.getParent().getName().matches(basePathFilter)
+                    boolean result =  d.getParent().getName().matches(basePathFilter)
                             && d.getPackage().matches(includePackageFilter)
                             && !d.getPackage().matches(ignorePackageFilter)
-                            && (includeInternalDependencies || !d.getPackage().equals(d.getParent().getPackage()));
+                            && !d.getParent().getPackage().matches(ignorePackageFilter)
+                            && (includeInternalDependencies || d.getName().matches(basePathFilter));
+                    return result;
                 }
-            }).collect(Collectors.groupingBy(d -> d.getParent().getPackage()));
+            }).collect(Collectors.groupingBy(d -> d.getParent().getTopLevelPackage(tlps)));
 
             for (String fromPackage : grouped.keySet()) {
                 List<Dependency> deps = grouped.get(fromPackage);
                 System.out.println("\nProcessing dependencies for package " + fromPackage);
-                deps.stream().collect(Collectors.groupingBy(d -> d.getPackage(), Collectors.counting()))
+                deps.stream().collect(Collectors.groupingBy(d -> d.getTopLevelPackage(tlps), Collectors.counting()))
                         .forEach((toPackage, numberOfDependencies) -> result.addDependency(
-                                getGraphicProperties(fromPackage, packagePrefix),
-                                getGraphicProperties(toPackage, packagePrefix), numberOfDependencies));
+                                getGraphicProperties(fromPackage),
+                                getGraphicProperties(toPackage), numberOfDependencies));
             }
         }
 
@@ -265,11 +268,4 @@ public class DependencyFilter {
         return new Color(r, g, b);
     }
 
-    private static String getTopLevelPackage(String packageName, String packagePrefix) {
-        String topLevelPackage = packageName.startsWith(packagePrefix) ? packageName.substring(packagePrefix.length())
-                : packageName;
-        if (topLevelPackage.startsWith("."))
-            topLevelPackage = topLevelPackage.substring(1);
-        return topLevelPackage;
-    }
 }

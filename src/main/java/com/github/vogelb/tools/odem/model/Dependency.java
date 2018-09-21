@@ -1,5 +1,7 @@
 package com.github.vogelb.tools.odem.model;
 
+import com.github.vogelb.tools.odem.PackageUtil;
+
 public class Dependency {
 	private Type parent;
 	private final String name;
@@ -39,4 +41,8 @@ public class Dependency {
 		result.append("Dependency ").append(name).append('[').append(classification).append(']');
 		return result.toString();
 	}
+
+    public String getTopLevelPackage(ToplevelPackage[] tlps) {
+        return PackageUtil.getTopLevelPackage(getName(), tlps);
+    }
 }

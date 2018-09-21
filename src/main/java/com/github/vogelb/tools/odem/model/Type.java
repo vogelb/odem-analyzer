@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.github.vogelb.tools.odem.PackageUtil;
+
 public class Type {
 	private Container parent;
 	private final String name;
@@ -71,5 +73,9 @@ public class Type {
             return name.substring(0, lastDot);
         }
         return name;
+    }
+	
+	public String getTopLevelPackage(ToplevelPackage[] tlps) {
+        return PackageUtil.getTopLevelPackage(getName(), tlps);
     }
 }

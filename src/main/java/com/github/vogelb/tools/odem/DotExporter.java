@@ -39,8 +39,9 @@ public class DotExporter {
             });
 
             out.println();
-            graph.getElements().forEach(e -> e.dependencies.forEach(d -> out.println(String.format(dependencyFormat,
-                    d.a.name, d.b.name, getPenWidth(d.weight), getColor(d.a.color), d.weight))));
+            
+            graph.getElements().forEach(e -> e.dependencies.values().forEach( d -> { 
+                if (!d.a.name.equals(d.b.name)) out.println(String.format(dependencyFormat, d.a.name, d.b.name, getPenWidth(d.weight), getColor(d.a.color), d.weight));}));
 
             out.println("}");
         }

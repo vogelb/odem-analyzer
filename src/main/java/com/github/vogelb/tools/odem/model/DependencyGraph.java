@@ -15,16 +15,45 @@ public class DependencyGraph {
             this.b = b;
             this.weight = weight;
         }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((a == null) ? 0 : a.hashCode());
+            result = prime * result + ((b == null) ? 0 : b.hashCode());
+            return result;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            Dependency other = (Dependency) obj;
+            if (a == null) {
+                if (other.a != null)
+                    return false;
+            } else if (!a.equals(other.a))
+                return false;
+            if (b == null) {
+                if (other.b != null)
+                    return false;
+            } else if (!b.equals(other.b))
+                return false;
+            return true;
+        }
         public final GraphElement a;
         public final GraphElement b;
-        public final long weight;
+        public long weight;
     }
     
     public static class GraphElement {
         public String name;
         public Color color;
         public int weight;
-        public final List<Dependency> dependencies = new ArrayList<>();
+        public final Map<Dependency, Dependency> dependencies = new HashMap<>();
         
         public GraphElement(String name, Color color, int weight) {
             this.name = name;
@@ -73,7 +102,12 @@ public class DependencyGraph {
     		bb = addElement(b);
     	}
         Dependency d = new Dependency(aa, bb, weight);
-        aa.dependencies.add(d);
+        Dependency existing = aa.dependencies.get(d);
+        if (existing != null) {
+            existing.weight += d.weight;
+        } else {
+            aa.dependencies.put(d, d);
+        }
         System.out.println(String.format("Added dependency %s -> %s [%d]", a.name, b.name, weight));
     }
     
