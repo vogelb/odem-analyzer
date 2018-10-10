@@ -2,6 +2,7 @@ package com.github.vogelb.tools.odem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,7 +13,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.github.vogelb.tools.odem.model.Container;
 import com.github.vogelb.tools.odem.model.Dependency;
@@ -36,8 +41,14 @@ public class Parser {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setValidating(false);
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(in);
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+            documentBuilder.setEntityResolver(new EntityResolver() {
+                public InputSource resolveEntity(String publicID, String systemID)
+                        throws SAXException {
+                        return new InputSource(new StringReader(""));
+                    }
+            });
+            Document doc = documentBuilder.parse(in);
 
             NodeList containerNodes = doc.getDocumentElement().getElementsByTagName("container");
             for (int i = 0; i < containerNodes.getLength(); ++i) {

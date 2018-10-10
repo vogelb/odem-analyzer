@@ -11,16 +11,16 @@ import com.github.vogelb.tools.odem.model.Dependency;
  * Export dependencies to CSV format.
  */
 public class CsvExporter {
-    public static void exportDependencies(List<Dependency> dependencies, final String outputFile) {
+    public static void exportDependencies(final List<Dependency> dependencies, final Components components, final String outputFile) {
         try (PrintWriter out = new PrintWriter(new FileWriter(outputFile))) {
-            out.println("Container;TopLevelPackage;Package;Class;DependencyType;DependencyContainer;DependencyTopLevelPackage;DependencyPackage;Dependency");
+            out.println("Container;Component;Package;Class;DependencyType;DependencyContainer;DependencyComponent;DependencyPackage;Dependency");
             for (Dependency dependency : dependencies) {
                 String containerName = dependency.getParent().getParent().getShortName();
                 String packageName = dependency.getParent().getPackage();
-                String topLevelPackage = Components.getComponent(packageName);
+                String topLevelPackage = components.getComponent(packageName);
                 String dependencyContainer = dependency.getParent().getParent().getShortName();
                 String dependencyPackageName = dependency.getPackage();
-                String dependencyTopLevelPackage = Components.getComponent(dependencyPackageName);
+                String dependencyTopLevelPackage = components.getComponent(dependencyPackageName);
                 System.out.println(containerName + " :: " + dependency.getParent().getName() + " --> "
                         + dependencyPackageName + " :: " + dependency.getName());
                 out.println(containerName + ';' + topLevelPackage + ';' + packageName + ';'

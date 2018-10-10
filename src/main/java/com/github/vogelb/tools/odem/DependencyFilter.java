@@ -9,20 +9,20 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.vogelb.tools.odem.model.Container;
 import com.github.vogelb.tools.odem.model.Dependency;
-import com.github.vogelb.tools.odem.model.DependencyGraph;
-import com.github.vogelb.tools.odem.model.DependencyGraph.GraphElement;
 import com.github.vogelb.tools.odem.model.Type;
 import com.github.vogelb.tools.odem.model.TypeMap;
+import com.github.vogelb.tools.odem.model.graph.DependencyGraph;
+import com.github.vogelb.tools.odem.model.graph.GraphElement;
 
 /**
  * Filter given dependency containers according configurable criteria.
  */
 public class DependencyFilter {
     private final TypeMap containers;
-    private final Random random = new Random();
     private final String basePathFilter;
     private String includeContainerFilter = null;
     private String includePackageFilter = null;
@@ -30,6 +30,7 @@ public class DependencyFilter {
     private String ignoreContainerFilter = null;
     private boolean includeInternalDependencies = true;
     private Map<String, GraphElement> graphProperties = null;
+    private Components components = new Components();
 
     /**
      * Create a new Dependency Filter for given containers
@@ -42,6 +43,11 @@ public class DependencyFilter {
     DependencyFilter(TypeMap containers, String basePathFilter) {
         this.containers = containers;
         this.basePathFilter = basePathFilter;
+    }
+    
+    public DependencyFilter configureComponents(Components components) {
+        this.components = components;
+        return this;
     }
 
     /**
@@ -123,11 +129,12 @@ public class DependencyFilter {
     }
 
     private GraphElement getGraphicProperties(String name) {
-        if (graphProperties == null)
-            return null;
-        GraphElement result = graphProperties.get(name);
+        GraphElement result = null;
+        if (graphProperties != null) {
+            result = graphProperties.get(name);
+        }
         if (result == null) {
-            result = new GraphElement(name, getRandomColor(), 1);
+            result = new GraphElement(name, null, 1);
         }
         return result;
     }
@@ -159,26 +166,29 @@ public class DependencyFilter {
 
         for (Container c : sourceContainers) {
             System.out.println("Searching container " + c.getName());
-            Map<String, List<Dependency>> grouped = c.getDependencies().stream().filter(new Predicate<Dependency>() {
+            List<Dependency> filteredDependencies = c.getDependencies().stream().filter(new Predicate<Dependency>() {
                 @Override
                 public boolean test(Dependency d) {
-                    boolean result =  d.getParent().getName().matches(basePathFilter)
-                            && d.getPackage().matches(includePackageFilter)
-                            && !d.getPackage().matches(ignorePackageFilter)
-                            && !d.getParent().getPackage().matches(ignorePackageFilter)
-                            && (includeInternalDependencies || d.getName().matches(basePathFilter));
+                    boolean result =  (d.getParent().getName().matches(basePathFilter) || d.getName().matches(basePathFilter))
+                            && d.getName().matches(includePackageFilter) 
+                            && d.getParent().getName().matches(includePackageFilter)
+                            && !(d.getName().matches(ignorePackageFilter) || d.getParent().getName().matches(ignorePackageFilter))
+//                            && (includeInternalDependencies || d.getName().matches(basePathFilter))
+                            ;
                     return result;
                 }
-            }).collect(Collectors.groupingBy(d -> d.getParent().getTopLevelPackage()));
+            }).collect(Collectors.toList());
+            Map<String, List<Dependency>> groupedByDependency = filteredDependencies.stream().collect(Collectors.groupingBy(d -> components.getComponent(d.getName())));
 
-            for (String fromPackage : grouped.keySet()) {
-                List<Dependency> deps = grouped.get(fromPackage);
-                System.out.println("\nProcessing dependencies for package " + fromPackage);
-                deps.stream().collect(Collectors.groupingBy(d -> d.getTopLevelPackage(), Collectors.counting()))
-                        .forEach((toPackage, numberOfDependencies) -> result.addDependency(
-                                getGraphicProperties(fromPackage),
-                                getGraphicProperties(toPackage), numberOfDependencies));
+            for (String component : groupedByDependency.keySet()) {
+                System.out.println("\nProcessing incoming dependencies for component " + component);
+                List<Dependency> deps = groupedByDependency.get(component);
+                deps.stream().collect(Collectors.groupingBy(d -> components.getComponent(d.getParent().getName()), Collectors.counting()))
+                        .forEach((fromPackage, numberOfDependencies) -> result.addDependency(
+                                getGraphicProperties(fromPackage), getGraphicProperties(component),
+                                numberOfDependencies));
             }
+            
         }
 
         return result;
@@ -209,6 +219,7 @@ public class DependencyFilter {
                         boolean result = d.getParent().getName().matches(basePathFilter)
                                 && d.getPackage().matches(includePackageFilter)
                                 && !d.getPackage().matches(ignorePackageFilter)
+                                && !components.getComponent(d.getName()).equals(components.getComponent(d.getParent().getName()))
                                 && (includeInternalDependencies || !d.getName().matches(basePathFilter));
                         return result;
                     }
@@ -258,13 +269,4 @@ public class DependencyFilter {
 
         return result;
     }
-
-    private Color getRandomColor() {
-        // Java 'Color' class takes 3 floats, from 0 to 1.
-        float r = random.nextFloat();
-        float g = random.nextFloat();
-        float b = random.nextFloat();
-        return new Color(r, g, b);
-    }
-
 }

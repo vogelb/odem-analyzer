@@ -1,11 +1,12 @@
 package com.github.vogelb.tools.odem;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-public abstract class Components {
+public class Components {
     
-    private static class ComponentMapping {
+    private static class ComponentMapping implements Comparable<ComponentMapping>{
         public final String name;
         public final String packagePrefix;
         public final int numPathElements;
@@ -21,15 +22,38 @@ public abstract class Components {
             packagePrefix = aPathPrefix;
             numPathElements = pathElements;
         }
+        
+        public String toString() {
+            return name + " [" + packagePrefix + '/' + numPathElements +']';
+        }
+
+        @Override
+        public int compareTo(ComponentMapping other) {
+            return Integer.compare(other.packagePrefix.length(), packagePrefix.length());
+        }
     }
     
-    private static final List<ComponentMapping> components = new ArrayList<>();
+    private final Map<String, ComponentMapping> components;
     
-    public static void addComponent(String aComponentName, String aPathPrefix, int pathElements) {
-        components.add(new ComponentMapping(aComponentName, aPathPrefix, pathElements));
+    public Components() {
+        components = new HashMap<>();
     }
     
-    public static void clear() {
+    public Components(Components other) {
+        components = new HashMap<>(other.components);
+    }
+    
+    public Components(String aComponentName, String aPathPrefix, int pathElements) {
+        this();
+        add(aComponentName, aPathPrefix, pathElements);
+    }
+    
+    public Components add(String aComponentName, String aPathPrefix, int pathElements) {
+        components.put(aComponentName, new ComponentMapping(aComponentName, aPathPrefix, pathElements));
+        return this;
+    }
+    
+    public void clear() {
         components.clear();
     }
     
@@ -39,23 +63,32 @@ public abstract class Components {
      * @param components the component Mappings
      * @return
      */
-    public static String getComponent(String aPackageName) {
-        for (ComponentMapping component : components) {
-            if (aPackageName.startsWith(component.packagePrefix)) {
-                String result = component.name; 
-                if (component.numPathElements > 0) {
-                    String remainder = aPackageName.substring(component.packagePrefix.length());
-                    if (remainder.startsWith(".")) remainder = remainder.substring(1);
-                    result += ".";
-                    String[] parts = remainder.split("\\.");
-                    for (int i = 0; i < parts.length && i < component.numPathElements; ++i) {
-                        result += parts[i];
-                    }
-                }
-                return result;
-            }
+    public String getComponent(String aPackageName) {
+        Optional<ComponentMapping> component = components.values().stream().filter(c -> aPackageName.startsWith(c.packagePrefix)).sorted().findFirst();
+        if (component.isPresent()) {
+            return getComponentPath(aPackageName, component.get());
         }
         return aPackageName;
+    }
+
+    private String getComponentPath(String aPackageName, ComponentMapping componentMapping) {
+        StringBuilder result = new StringBuilder(componentMapping.name);
+        if (componentMapping.numPathElements > 0) {
+            String remainder = aPackageName.substring(componentMapping.packagePrefix.length());
+            if (remainder.startsWith(".")) {
+                remainder = remainder.substring(1);
+            }
+            String[] parts = remainder.split("\\.");
+            for (int i = 0; i < parts.length && i < componentMapping.numPathElements; ++i) {
+                result.append('.').append(parts[i]);
+            }
+        }
+        return result.toString();
+    }
+
+    public Components remove(String aComponentName) {
+        components.remove(aComponentName);
+        return this;
     }
 
 }
