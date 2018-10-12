@@ -1,8 +1,10 @@
 package com.github.vogelb.tools.odem;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Components {
     
@@ -39,8 +41,8 @@ public class Components {
         components = new HashMap<>();
     }
     
-    public Components(Components other) {
-        components = new HashMap<>(other.components);
+    public Components(Components base) {
+        components = new HashMap<>(base.components);
     }
     
     public Components(String aComponentName, String aPathPrefix, int pathElements) {
@@ -89,6 +91,10 @@ public class Components {
     public Components remove(String aComponentName) {
         components.remove(aComponentName);
         return this;
+    }
+    
+    public Collection<String> getAll() {
+        return components.values().stream().map(c -> c.name).collect(Collectors.toList());
     }
 
 }

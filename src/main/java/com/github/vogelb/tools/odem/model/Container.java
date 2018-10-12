@@ -5,12 +5,16 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Container {
-	private final String name;
+	private String name;
 	private final List<Type> types = new ArrayList<Type>();
 	
 	public String getName() {
 		return name;
 	}
+	
+	public void setName(String newName) {
+        name = newName;
+    }
 
 	public Container(String containerName) {
 		name = containerName;
@@ -21,7 +25,6 @@ public class Container {
 	}
 	
 	public void addType(Type type) {
-		type.setParent(this);
 		types.add(type);
 	}
 	

@@ -5,19 +5,26 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Type {
-	private Container parent;
+    private static final Logger logger = LoggerFactory.getLogger(Type.class);
+    
+	private final Container parent;
 	private final String name;
-	private final List<Dependency> dependencies = new ArrayList<Dependency>();
+	private final boolean isExternal;
+	public boolean isExternal() {
+        return isExternal;
+    }
+
+    private final List<Dependency> dependencies = new ArrayList<Dependency>();
+	
 
 	public Container getParent() {
 		return parent;
 	}
 
-	public void setParent(Container parent) {
-		this.parent = parent;
-	}
-	
 	public List<Dependency> getDependencies() {
 		return dependencies;
 	}
@@ -26,12 +33,19 @@ public class Type {
 		return name;
 	}
 
-	public Type(String containerName) {
+	
+	public Type(Container parent, String containerName) {
+	    this(parent, containerName, false);
+	}
+	
+	public Type(Container parent, String containerName, boolean external) {
+	    this.parent = parent;
 		name = containerName;
+		isExternal = external;
 	}
 
 	public void addDependency(Dependency dependency) {
-		dependency.setParent(this);
+		dependency.setDependent(this);
 		dependencies.add(dependency);
 	}
 	
@@ -57,11 +71,7 @@ public class Type {
 			}
 		});
 		
-		if (name.equals("com.lsyas.acs.basis.mad.mbq.ejb.MadMbqBc")) {
-			System.out.println("DADA");
-		}
-
-		System.out.println("Type " + getName() + " has dependency " + filter + ": " + result);
+		logger.debug("Type {} has dependency {}: {}", getName(), filter, result);
 		return result;
 	}
 

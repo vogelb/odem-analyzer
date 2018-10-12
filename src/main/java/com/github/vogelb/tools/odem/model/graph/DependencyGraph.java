@@ -6,7 +6,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DependencyGraph {
+
+    private static final Logger logger = LoggerFactory.getLogger(DependencyGraph.class);
     
     private Map<String, GraphElement> elements = new HashMap<>();
     
@@ -37,7 +42,7 @@ public class DependencyGraph {
         } else {
             aa.dependencies.put(d, d);
         }
-        System.out.println(String.format("Added dependency %s -> %s [%d]", a.name, b.name, weight));
+        logger.info("Added dependency %s -> %s [%d]", a.name, b.name, weight);
     }
     
     public Iterable<GraphElement> getElements() {

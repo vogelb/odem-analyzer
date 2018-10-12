@@ -1,15 +1,17 @@
 package com.github.vogelb.tools.odem;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.vogelb.tools.odem.model.Container;
 import com.github.vogelb.tools.odem.model.Dependency;
@@ -22,6 +24,10 @@ import com.github.vogelb.tools.odem.model.graph.GraphElement;
  * Filter given dependency containers according configurable criteria.
  */
 public class DependencyFilter {
+    private static final Container UNKNOWN_CONTAINER = new Container("EXTERNAL");
+
+    private static final Logger logger = LoggerFactory.getLogger(DependencyFilter.class);
+
     private final TypeMap containers;
     private final String basePathFilter;
     private String includeContainerFilter = null;
@@ -31,6 +37,14 @@ public class DependencyFilter {
     private boolean includeInternalDependencies = true;
     private Map<String, GraphElement> graphProperties = null;
     private Components components = new Components();
+    private Map<String, Container> classByContainers;
+    private Function<String, String> nameMapper = a -> a;
+    private boolean ignoreExternals = true;
+
+    public DependencyFilter setNameMapper(Function<String, String> mapper) {
+        nameMapper = mapper;
+        return this;
+    }
 
     /**
      * Create a new Dependency Filter for given containers
@@ -44,7 +58,7 @@ public class DependencyFilter {
         this.containers = containers;
         this.basePathFilter = basePathFilter;
     }
-    
+
     public DependencyFilter configureComponents(Components components) {
         this.components = components;
         return this;
@@ -55,8 +69,7 @@ public class DependencyFilter {
      * 
      * @param includeContainerFilter
      *            The filter expression
-     * @return a filter that will only accept dependencies to the given
-     *         containers
+     * @return a filter that will only accept dependencies to the given containers
      */
     public DependencyFilter includeContainerFilter(String includeContainerFilter) {
         this.includeContainerFilter = includeContainerFilter;
@@ -104,9 +117,8 @@ public class DependencyFilter {
      * 
      * @param includePackageDependencies
      *            The parameter
-     * @return A filter that will include dependencies from / to the same
-     *         package when set to true and ignore them otherwise. The default
-     *         setting is true.
+     * @return A filter that will include dependencies from / to the same package when set to true and ignore them
+     *         otherwise. The default setting is true.
      */
     public DependencyFilter setIncludePackageDependencies(boolean includePackageDependencies) {
         includeInternalDependencies = includePackageDependencies;
@@ -152,79 +164,131 @@ public class DependencyFilter {
             graphProperties.values().forEach(g -> result.addElement(g));
         }
 
-        Collection<Container> sourceContainers;
-        if (!(includeContainerFilter == null || includeContainerFilter.isEmpty())) {
-            sourceContainers = containers.getContainers().stream().filter(new Predicate<Container>() {
-                @Override
-                public boolean test(Container t) {
-                    return t.getShortName().matches(includeContainerFilter);
-                }
-            }).collect(Collectors.toList());
-        } else {
-            sourceContainers = containers.getContainers();
-        }
-
+        Collection<Container> sourceContainers = getFilteredContainers();
         for (Container c : sourceContainers) {
-            System.out.println("Searching container " + c.getName());
-            List<Dependency> filteredDependencies = c.getDependencies().stream().filter(new Predicate<Dependency>() {
-                @Override
-                public boolean test(Dependency d) {
-                    boolean result =  (d.getParent().getName().matches(basePathFilter) || d.getName().matches(basePathFilter))
-                            && d.getName().matches(includePackageFilter) 
-                            && d.getParent().getName().matches(includePackageFilter)
-                            && !(d.getName().matches(ignorePackageFilter) || d.getParent().getName().matches(ignorePackageFilter))
-//                            && (includeInternalDependencies || d.getName().matches(basePathFilter))
-                            ;
-                    return result;
-                }
-            }).collect(Collectors.toList());
-            Map<String, List<Dependency>> groupedByDependency = filteredDependencies.stream().collect(Collectors.groupingBy(d -> components.getComponent(d.getName())));
+            logger.info("Searching container {}", c.getName());
+            List<Dependency> filteredDependencies = filterDependencies(c).collect(Collectors.toList());
+            Map<String, List<Dependency>> groupedByDependency = filteredDependencies.stream()
+                    .collect(Collectors.groupingBy(d -> components.getComponent(d.getName())));
 
             for (String component : groupedByDependency.keySet()) {
-                System.out.println("\nProcessing incoming dependencies for component " + component);
+                logger.info("Processing incoming dependencies for component {}", component);
                 List<Dependency> deps = groupedByDependency.get(component);
-                deps.stream().collect(Collectors.groupingBy(d -> components.getComponent(d.getParent().getName()), Collectors.counting()))
+                deps.stream().collect(Collectors.groupingBy(d -> components.getComponent(d.getDependent().getName()),
+                        Collectors.counting()))
                         .forEach((fromPackage, numberOfDependencies) -> result.addDependency(
                                 getGraphicProperties(fromPackage), getGraphicProperties(component),
                                 numberOfDependencies));
             }
-            
+        }
+        return result;
+    }
+
+    private Stream<Dependency> filterDependencies(Container c) {
+        return c.getDependencies().stream().filter(new Predicate<Dependency>() {
+            @Override
+            public boolean test(Dependency d) {
+                boolean result = (d.getDependent().getName().matches(basePathFilter)
+                        || d.getName().matches(basePathFilter))
+                        && (includePackageFilter == null || d.getName().matches(includePackageFilter))
+                        && (includePackageFilter == null || d.getDependent().getName().matches(includePackageFilter))
+                        && (ignorePackageFilter == null || !(d.getName().matches(ignorePackageFilter)
+                                || d.getDependent().getName().matches(ignorePackageFilter)));
+                return result;
+            }
+        });
+    }
+
+    /**
+     * Build a graph of dependencies between containers.
+     * 
+     * @return The graph
+     */
+    public DependencyGraph buildContainerGraph() {
+
+        DependencyGraph result = new DependencyGraph();
+        if (graphProperties != null) {
+            graphProperties.values().forEach(g -> result.addElement(g));
+        }
+
+        Collection<Container> sourceContainers = getFilteredContainers();
+
+        buildTypeMap(sourceContainers);
+
+        for (Container c : sourceContainers) {
+            logger.info("Searching container {}", c.getName());
+            filterDependencies(c)
+                    .collect(Collectors.groupingBy(d -> getContainerForClass(d.getName()), Collectors.counting()))
+                    .forEach(
+                            (container, weight) -> {
+                                if (!(ignoreExternals && container.equals(UNKNOWN_CONTAINER))) {
+                                    result.addDependency(getGraphicProperties(nameMapper.apply(c.getName())),
+                                            getGraphicProperties(nameMapper.apply(container.getName())), weight);
+                                }
+                            });
         }
 
         return result;
     }
 
-    public List<Dependency> getDependenciesFrom() {
-        List<Dependency> result = new ArrayList<Dependency>();
-        // Get all source containers
+    private Collection<Container> getFilteredContainers() {
         Collection<Container> sourceContainers;
-        if (!(includeContainerFilter == null || includeContainerFilter.isEmpty())) {
+        if (!(includeContainerFilter == null || includeContainerFilter.isEmpty())
+                || !(ignoreContainerFilter == null || ignoreContainerFilter.isEmpty())) {
             sourceContainers = containers.getContainers().stream().filter(new Predicate<Container>() {
                 @Override
                 public boolean test(Container t) {
-                    return t.getShortName().matches(includeContainerFilter);
+                    boolean result = true;
+                    if (!(includeContainerFilter == null || includeContainerFilter.isEmpty())) {
+                        result = t.getShortName().matches(includeContainerFilter);
+                    }
+                    if (!(ignoreContainerFilter == null || ignoreContainerFilter.isEmpty())) {
+                        result &= !t.getShortName().matches(ignoreContainerFilter);
+                    }
+                    return result;
                 }
             }).collect(Collectors.toList());
         } else {
             sourceContainers = containers.getContainers();
         }
+        return sourceContainers;
+    }
 
+    private void buildTypeMap(Collection<Container> sourceContainers) {
+        logger.info("Build type map...");
+        classByContainers = new HashMap<>();
+        components.getAll().forEach(c -> classByContainers.put(c, new Container(c)));
         for (Container c : sourceContainers) {
-            System.out.println("Searching container " + c.getName());
-            for (Type t : c.getTypes()) {
-                Type type = t;
-                result.addAll(type.getDependencies().stream().filter(new Predicate<Dependency>() {
-                    @Override
-                    public boolean test(Dependency d) {
-                        boolean result = d.getParent().getName().matches(basePathFilter)
-                                && d.getPackage().matches(includePackageFilter)
-                                && !d.getPackage().matches(ignorePackageFilter)
-                                && !components.getComponent(d.getName()).equals(components.getComponent(d.getParent().getName()))
-                                && (includeInternalDependencies || !d.getName().matches(basePathFilter));
-                        return result;
-                    }
-                }).collect(Collectors.toList()));
-            }
+            c.getTypes().forEach(t -> {
+                logger.info("Adding container {} for class {}", c.getName(), t.getName());
+                classByContainers.put(t.getName(), c);
+            });
+        }
+    }
+
+    private Container getContainerForClass(String className) {
+        String component = components.getComponent(className);
+        if (component != null && classByContainers.containsKey(component)) {
+            return classByContainers.get(component);
+        }
+
+        if (classByContainers.containsKey(className)) {
+            return classByContainers.get(className);
+        }
+        logger.debug("Mapping {} to EXTERNAL", className);
+        return UNKNOWN_CONTAINER;
+    }
+
+    public List<Dependency> getDependenciesFrom() {
+        List<Dependency> result = new ArrayList<Dependency>();
+        // Get all source containers
+        Collection<Container> sourceContainers = getFilteredContainers();
+        for (Container c : sourceContainers) {
+            result.addAll(filterDependencies(c).peek(d -> {
+                d.setName(nameMapper.apply(d.getName()));
+                d.getType().getParent().setName(nameMapper.apply(d.getType().getParent().getName()));
+                d.getDependent().getParent().setName(nameMapper.apply(d.getDependent().getParent().getName()));
+            }).collect(Collectors.toList()));
         }
         return result;
     }
@@ -251,16 +315,16 @@ public class DependencyFilter {
         }
 
         for (Container c : sourceContainers) {
-            System.out.println("Searching container " + c.getName() + " for dependents on " + basePathFilter + " / "
-                    + includePackageFilter);
+            logger.info("Searching container {} for dependents on {} / {}", c.getName(), basePathFilter,
+                    includePackageFilter);
             for (Type t : c.getTypes()) {
                 result.addAll(t.getDependencies().stream().filter(new Predicate<Dependency>() {
                     @Override
                     public boolean test(Dependency d) {
                         boolean result = d.getName().matches(basePathFilter)
                                 && d.getPackage().matches(includePackageFilter)
-                                && !d.getParent().getName().matches(ignorePackageFilter)
-                                && (includeInternalDependencies || !d.getParent().getName().matches(basePathFilter));
+                                && !d.getDependent().getName().matches(ignorePackageFilter)
+                                && (includeInternalDependencies || !d.getDependent().getName().matches(basePathFilter));
                         return result;
                     }
                 }).collect(Collectors.toList()));
@@ -269,4 +333,10 @@ public class DependencyFilter {
 
         return result;
     }
+
+    public DependencyFilter ignoreExternals(boolean b) {
+        ignoreExternals = b;
+        return this;
+    }
+
 }
