@@ -9,56 +9,97 @@
     </created-by>
   </header>
   <context name="Odem Analyzer">
-    <container name="C:/dev/devpack/workspace/odem-analyzer/target/classes" classification="dir">
+    <container name="W:/workspace/odem-analyzer/target/classes" classification="dir">
       <namespace name="com.github.vogelb.tools.odem">
-        <type name="com.github.vogelb.tools.odem.CsvExporter" classification="class" visibility="public">
-          <dependencies count="16">
+        <type name="com.github.vogelb.tools.odem.Components$ComponentMapping" classification="class" visibility="default">
+          <dependencies count="6">
             <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="java.lang.Comparable" classification="uses" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="java.lang.StringBuilder" classification="uses" />
+            <depends-on name="java.lang.Integer" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.Components" classification="class" visibility="public">
+          <dependencies count="19">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="java.util.Map" classification="uses" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components$ComponentMapping" classification="uses" />
+            <depends-on name="java.util.Optional" classification="uses" />
+            <depends-on name="java.lang.StringBuilder" classification="uses" />
+            <depends-on name="java.util.Collection" classification="uses" />
+            <depends-on name="java.util.HashMap" classification="uses" />
+            <depends-on name="java.util.stream.Stream" classification="uses" />
+            <depends-on name="java.util.function.Predicate" classification="uses" />
+            <depends-on name="java.util.function.Function" classification="uses" />
+            <depends-on name="java.util.stream.Collectors" classification="uses" />
+            <depends-on name="java.util.stream.Collector" classification="uses" />
+            <depends-on name="java.lang.invoke.LambdaMetafactory" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles$Lookup" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodType" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandle" classification="uses" />
+            <depends-on name="java.lang.invoke.CallSite" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.CsvExporter" classification="class" visibility="public">
+          <dependencies count="19">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="org.slf4j.Logger" classification="uses" />
             <depends-on name="java.util.List" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
             <depends-on name="java.io.PrintWriter" classification="uses" />
             <depends-on name="java.io.IOException" classification="uses" />
+            <depends-on name="org.slf4j.LoggerFactory" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
             <depends-on name="java.io.FileWriter" classification="uses" />
             <depends-on name="java.io.Writer" classification="uses" />
             <depends-on name="java.util.Iterator" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
-            <depends-on name="java.lang.System" classification="uses" />
-            <depends-on name="java.io.PrintStream" classification="uses" />
             <depends-on name="java.lang.StringBuilder" classification="uses" />
+            <depends-on name="java.lang.Integer" classification="uses" />
             <depends-on name="java.lang.Throwable" classification="uses" />
             <depends-on name="java.lang.RuntimeException" classification="uses" />
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.DependencyAnalyser" classification="class" visibility="public">
-          <dependencies count="5">
+          <dependencies count="9">
             <depends-on name="java.lang.Object" classification="extends" />
             <depends-on name="com.github.vogelb.tools.odem.model.TypeMap" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
+            <depends-on name="java.io.InputStream" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.Parser" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
+            <depends-on name="java.io.FileNotFoundException" classification="uses" />
+            <depends-on name="java.io.FileInputStream" classification="uses" />
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.DependencyFilter$1" classification="class" visibility="default">
+          <dependencies count="8">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="java.util.function.Predicate" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
+            <depends-on name="java.util.stream.Stream" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.DependencyFilter$2" classification="class" visibility="default">
           <dependencies count="6">
             <depends-on name="java.lang.Object" classification="extends" />
             <depends-on name="java.util.function.Predicate" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
-          </dependencies>
-        </type>
-        <type name="com.github.vogelb.tools.odem.DependencyFilter$2" classification="class" visibility="default">
-          <dependencies count="7">
-            <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="java.util.function.Predicate" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
-            <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
+            <depends-on name="java.util.Collection" classification="uses" />
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.DependencyFilter$3" classification="class" visibility="default">
@@ -77,68 +118,45 @@
             <depends-on name="java.util.function.Predicate" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
-            <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="java.util.List" classification="uses" />
-          </dependencies>
-        </type>
-        <type name="com.github.vogelb.tools.odem.DependencyFilter$5" classification="class" visibility="default">
-          <dependencies count="6">
-            <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="java.util.function.Predicate" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
-            <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="java.util.List" classification="uses" />
-          </dependencies>
-        </type>
-        <type name="com.github.vogelb.tools.odem.DependencyFilter$6" classification="class" visibility="default">
-          <dependencies count="7">
-            <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="java.util.function.Predicate" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
             <depends-on name="java.util.List" classification="uses" />
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.DependencyFilter" classification="class" visibility="public">
-          <dependencies count="40">
+          <dependencies count="38">
             <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
+            <depends-on name="org.slf4j.Logger" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.TypeMap" classification="uses" />
-            <depends-on name="java.util.Random" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
             <depends-on name="java.util.Map" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$GraphElement" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Node" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
+            <depends-on name="java.util.function.Function" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.DependencyGraph" classification="uses" />
             <depends-on name="java.util.Collection" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
             <depends-on name="java.util.List" classification="uses" />
+            <depends-on name="java.util.stream.Stream" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
-            <depends-on name="java.awt.Color" classification="uses" />
             <depends-on name="java.lang.Long" classification="uses" />
+            <depends-on name="org.slf4j.LoggerFactory" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
             <depends-on name="java.util.HashMap" classification="uses" />
+            <depends-on name="java.awt.Color" classification="uses" />
             <depends-on name="java.util.function.Consumer" classification="uses" />
-            <depends-on name="java.util.stream.Stream" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$1" classification="uses" />
-            <depends-on name="java.util.function.Predicate" classification="uses" />
+            <depends-on name="java.util.Iterator" classification="uses" />
             <depends-on name="java.util.stream.Collectors" classification="uses" />
             <depends-on name="java.util.stream.Collector" classification="uses" />
-            <depends-on name="java.util.Iterator" classification="uses" />
-            <depends-on name="java.lang.System" classification="uses" />
-            <depends-on name="java.io.PrintStream" classification="uses" />
-            <depends-on name="java.lang.StringBuilder" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$2" classification="uses" />
-            <depends-on name="java.util.function.Function" classification="uses" />
             <depends-on name="java.util.Set" classification="uses" />
             <depends-on name="java.util.function.BiConsumer" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$1" classification="uses" />
+            <depends-on name="java.util.function.Predicate" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$2" classification="uses" />
             <depends-on name="java.util.ArrayList" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$3" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$4" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$5" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter$6" classification="uses" />
             <depends-on name="java.lang.invoke.LambdaMetafactory" classification="uses" />
             <depends-on name="java.lang.invoke.MethodHandles$Lookup" classification="uses" />
             <depends-on name="java.lang.invoke.MethodType" classification="uses" />
@@ -148,16 +166,17 @@
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.DotExporter" classification="class" visibility="public">
-          <dependencies count="24">
+          <dependencies count="27">
             <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$GraphElement" classification="uses" />
+            <depends-on name="java.util.Random" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.DependencyGraph" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Node" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
             <depends-on name="java.io.File" classification="uses" />
             <depends-on name="java.io.PrintStream" classification="uses" />
             <depends-on name="java.util.List" classification="uses" />
             <depends-on name="java.awt.Color" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$Dependency" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Dependency" classification="uses" />
             <depends-on name="java.io.IOException" classification="uses" />
             <depends-on name="java.io.FileOutputStream" classification="uses" />
             <depends-on name="java.io.OutputStream" classification="uses" />
@@ -166,6 +185,8 @@
             <depends-on name="java.lang.Iterable" classification="uses" />
             <depends-on name="java.lang.Throwable" classification="uses" />
             <depends-on name="java.lang.Integer" classification="uses" />
+            <depends-on name="java.util.Map" classification="uses" />
+            <depends-on name="java.util.Collection" classification="uses" />
             <depends-on name="java.lang.Long" classification="uses" />
             <depends-on name="java.lang.invoke.LambdaMetafactory" classification="uses" />
             <depends-on name="java.lang.invoke.MethodHandles$Lookup" classification="uses" />
@@ -175,27 +196,75 @@
             <depends-on name="java.lang.invoke.MethodHandles" classification="uses" />
           </dependencies>
         </type>
-        <type name="com.github.vogelb.tools.odem.Main" classification="class" visibility="public">
-          <dependencies count="11">
+        <type name="com.github.vogelb.tools.odem.GebitMain" classification="class" visibility="public">
+          <dependencies count="21">
             <depends-on name="java.lang.Object" classification="extends" />
             <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$GraphElement" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Node" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
+            <depends-on name="java.io.InputStream" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyAnalyser" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.DependencyGraph" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
+            <depends-on name="java.util.List" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.UMLExporter" classification="uses" />
+            <depends-on name="java.io.IOException" classification="uses" />
+            <depends-on name="java.io.FileInputStream" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.DotExporter" classification="uses" />
+            <depends-on name="java.util.function.Function" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.CsvExporter" classification="uses" />
+            <depends-on name="java.lang.invoke.LambdaMetafactory" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles$Lookup" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodType" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandle" classification="uses" />
+            <depends-on name="java.lang.invoke.CallSite" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.Main" classification="class" visibility="public">
+          <dependencies count="15">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Node" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
+            <depends-on name="java.io.InputStream" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.DependencyAnalyser" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.DependencyGraph" classification="uses" />
             <depends-on name="java.io.IOException" classification="uses" />
             <depends-on name="java.util.List" classification="uses" />
             <depends-on name="java.awt.Color" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
+            <depends-on name="java.lang.ClassLoader" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DependencyFilter" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.DotExporter" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.CsvExporter" classification="uses" />
           </dependencies>
         </type>
-        <type name="com.github.vogelb.tools.odem.Parser" classification="class" visibility="public">
-          <dependencies count="22">
+        <type name="com.github.vogelb.tools.odem.Parser$1" classification="class" visibility="default">
+          <dependencies count="10">
             <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="org.xml.sax.EntityResolver" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Parser" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="org.xml.sax.InputSource" classification="uses" />
+            <depends-on name="org.xml.sax.SAXException" classification="uses" />
+            <depends-on name="java.io.StringReader" classification="uses" />
+            <depends-on name="java.io.Reader" classification="uses" />
+            <depends-on name="java.io.InputStream" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.TypeMap" classification="uses" />
-            <depends-on name="java.io.FileInputStream" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.Parser" classification="class" visibility="public">
+          <dependencies count="39">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
+            <depends-on name="java.util.Map" classification="uses" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Components" classification="uses" />
+            <depends-on name="org.slf4j.Logger" classification="uses" />
+            <depends-on name="java.io.InputStream" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.TypeMap" classification="uses" />
             <depends-on name="javax.xml.parsers.DocumentBuilderFactory" classification="uses" />
             <depends-on name="javax.xml.parsers.DocumentBuilder" classification="uses" />
             <depends-on name="org.w3c.dom.Document" classification="uses" />
@@ -203,17 +272,59 @@
             <depends-on name="org.w3c.dom.Node" classification="uses" />
             <depends-on name="java.lang.Exception" classification="uses" />
             <depends-on name="java.io.IOException" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
+            <depends-on name="java.util.Collection" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
             <depends-on name="org.w3c.dom.NamedNodeMap" classification="uses" />
-            <depends-on name="java.io.InputStream" classification="uses" />
+            <depends-on name="org.slf4j.LoggerFactory" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
+            <depends-on name="java.util.HashMap" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.Parser$1" classification="uses" />
+            <depends-on name="org.xml.sax.EntityResolver" classification="uses" />
             <depends-on name="org.w3c.dom.Element" classification="uses" />
             <depends-on name="java.lang.RuntimeException" classification="uses" />
             <depends-on name="java.lang.StringBuilder" classification="uses" />
             <depends-on name="java.lang.Throwable" classification="uses" />
             <depends-on name="javax.xml.parsers.ParserConfigurationException" classification="uses" />
             <depends-on name="org.xml.sax.SAXException" classification="uses" />
+            <depends-on name="java.util.ArrayList" classification="uses" />
+            <depends-on name="java.util.function.Consumer" classification="uses" />
+            <depends-on name="java.util.List" classification="uses" />
+            <depends-on name="java.lang.invoke.LambdaMetafactory" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles$Lookup" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodType" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandle" classification="uses" />
+            <depends-on name="java.lang.invoke.CallSite" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.UMLExporter" classification="class" visibility="public">
+          <dependencies count="26">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="org.slf4j.Logger" classification="uses" />
+            <depends-on name="java.util.List" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
+            <depends-on name="java.util.Set" classification="uses" />
+            <depends-on name="java.io.PrintWriter" classification="uses" />
+            <depends-on name="java.io.IOException" classification="uses" />
+            <depends-on name="org.slf4j.LoggerFactory" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
+            <depends-on name="java.util.HashSet" classification="uses" />
+            <depends-on name="java.io.FileWriter" classification="uses" />
+            <depends-on name="java.io.Writer" classification="uses" />
+            <depends-on name="java.lang.StringBuilder" classification="uses" />
+            <depends-on name="java.util.UUID" classification="uses" />
+            <depends-on name="java.util.function.Consumer" classification="uses" />
+            <depends-on name="java.lang.Throwable" classification="uses" />
+            <depends-on name="java.lang.RuntimeException" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
+            <depends-on name="java.lang.invoke.LambdaMetafactory" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles$Lookup" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodType" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandle" classification="uses" />
+            <depends-on name="java.lang.invoke.CallSite" classification="uses" />
+            <depends-on name="java.lang.invoke.MethodHandles" classification="uses" />
           </dependencies>
         </type>
       </namespace>
@@ -239,41 +350,6 @@
             <depends-on name="java.lang.StringBuilder" classification="uses" />
           </dependencies>
         </type>
-        <type name="com.github.vogelb.tools.odem.model.DependencyGraph$Dependency" classification="class" visibility="public">
-          <dependencies count="3">
-            <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$GraphElement" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
-          </dependencies>
-        </type>
-        <type name="com.github.vogelb.tools.odem.model.DependencyGraph$GraphElement" classification="class" visibility="public">
-          <dependencies count="8">
-            <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="java.awt.Color" classification="uses" />
-            <depends-on name="java.util.List" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$Dependency" classification="uses" />
-            <depends-on name="java.util.ArrayList" classification="uses" />
-            <depends-on name="java.lang.Class" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="uses" />
-          </dependencies>
-        </type>
-        <type name="com.github.vogelb.tools.odem.model.DependencyGraph" classification="class" visibility="public">
-          <dependencies count="12">
-            <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="java.util.List" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$GraphElement" classification="uses" />
-            <depends-on name="java.lang.String" classification="uses" />
-            <depends-on name="java.awt.Color" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.DependencyGraph$Dependency" classification="uses" />
-            <depends-on name="java.lang.Iterable" classification="uses" />
-            <depends-on name="java.util.ArrayList" classification="uses" />
-            <depends-on name="java.lang.System" classification="uses" />
-            <depends-on name="java.io.PrintStream" classification="uses" />
-            <depends-on name="java.lang.Long" classification="uses" />
-            <depends-on name="java.util.Collections" classification="uses" />
-          </dependencies>
-        </type>
         <type name="com.github.vogelb.tools.odem.model.Type$1" classification="class" visibility="default">
           <dependencies count="5">
             <depends-on name="java.lang.Object" classification="extends" />
@@ -284,34 +360,76 @@
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.model.Type" classification="class" visibility="public">
-          <dependencies count="13">
+          <dependencies count="15">
             <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="org.slf4j.Logger" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
             <depends-on name="java.util.List" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Dependency" classification="uses" />
             <depends-on name="java.lang.StringBuilder" classification="uses" />
             <depends-on name="java.util.Iterator" classification="uses" />
+            <depends-on name="org.slf4j.LoggerFactory" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
             <depends-on name="java.util.ArrayList" classification="uses" />
             <depends-on name="java.util.stream.Stream" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Type$1" classification="uses" />
             <depends-on name="java.util.function.Predicate" classification="uses" />
-            <depends-on name="java.lang.System" classification="uses" />
-            <depends-on name="java.io.PrintStream" classification="uses" />
+            <depends-on name="java.lang.Boolean" classification="uses" />
           </dependencies>
         </type>
         <type name="com.github.vogelb.tools.odem.model.TypeMap" classification="class" visibility="public">
-          <dependencies count="10">
+          <dependencies count="9">
             <depends-on name="java.lang.Object" classification="extends" />
-            <depends-on name="java.util.List" classification="uses" />
-            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
             <depends-on name="java.util.Map" classification="uses" />
             <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.Container" classification="uses" />
             <depends-on name="com.github.vogelb.tools.odem.model.Type" classification="uses" />
             <depends-on name="java.util.Collection" classification="uses" />
-            <depends-on name="java.util.ArrayList" classification="uses" />
             <depends-on name="java.util.HashMap" classification="uses" />
+            <depends-on name="java.util.List" classification="uses" />
             <depends-on name="java.util.Iterator" classification="uses" />
+          </dependencies>
+        </type>
+      </namespace>
+      <namespace name="com.github.vogelb.tools.odem.model.graph">
+        <type name="com.github.vogelb.tools.odem.model.graph.Dependency" classification="class" visibility="public">
+          <dependencies count="3">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Node" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.model.graph.DependencyGraph" classification="class" visibility="public">
+          <dependencies count="16">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="org.slf4j.Logger" classification="uses" />
+            <depends-on name="java.util.Map" classification="uses" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Node" classification="uses" />
+            <depends-on name="java.awt.Color" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Dependency" classification="uses" />
+            <depends-on name="java.lang.Iterable" classification="uses" />
+            <depends-on name="org.slf4j.LoggerFactory" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
+            <depends-on name="java.util.HashMap" classification="uses" />
+            <depends-on name="java.lang.Long" classification="uses" />
+            <depends-on name="java.util.ArrayList" classification="uses" />
+            <depends-on name="java.util.Collection" classification="uses" />
+            <depends-on name="java.util.Collections" classification="uses" />
+            <depends-on name="java.util.List" classification="uses" />
+          </dependencies>
+        </type>
+        <type name="com.github.vogelb.tools.odem.model.graph.Node" classification="class" visibility="public">
+          <dependencies count="8">
+            <depends-on name="java.lang.Object" classification="extends" />
+            <depends-on name="java.lang.String" classification="uses" />
+            <depends-on name="java.awt.Color" classification="uses" />
+            <depends-on name="java.util.Map" classification="uses" />
+            <depends-on name="com.github.vogelb.tools.odem.model.graph.Dependency" classification="uses" />
+            <depends-on name="java.util.HashMap" classification="uses" />
+            <depends-on name="java.lang.StringBuilder" classification="uses" />
+            <depends-on name="java.lang.Class" classification="uses" />
           </dependencies>
         </type>
       </namespace>

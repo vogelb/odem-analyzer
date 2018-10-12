@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GraphElement {
+public class Node {
     public String name;
     public Color color;
     public int weight;
     public final Map<Dependency, Dependency> dependencies = new HashMap<>();
     
-    public GraphElement(String name, Color color, int weight) {
+    public Node(String name, Color color, int weight) {
         this.name = name;
         this.color = color;
         this.weight = weight;
@@ -33,7 +33,7 @@ public class GraphElement {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        GraphElement other = (GraphElement) obj;
+        Node other = (Node) obj;
         return name.equals(other.name);
     }
 }

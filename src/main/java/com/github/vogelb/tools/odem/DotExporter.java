@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.github.vogelb.tools.odem.model.graph.DependencyGraph;
-import com.github.vogelb.tools.odem.model.graph.GraphElement;
+import com.github.vogelb.tools.odem.model.graph.Node;
 
 /**
  * Simple exporter for .dot files.<br/>
@@ -19,7 +19,7 @@ import com.github.vogelb.tools.odem.model.graph.GraphElement;
 public class DotExporter {
     private static final Random random = new Random();
 
-    public static void exportDependencyGraph(DependencyGraph graph, GraphElement[] graphProps, String fileName)
+    public static void exportDependencyGraph(DependencyGraph graph, Node[] graphProps, String fileName)
             throws IOException {
         File outFile = new File(fileName);
 
@@ -33,7 +33,7 @@ public class DotExporter {
 
             out.println();
 
-            List<GraphElement> predefined = Arrays.asList(graphProps);
+            List<Node> predefined = Arrays.asList(graphProps);
             predefined.forEach(e -> out.println(String.format(nodeFormat, e.name, getColor(e.color), getFontColor(e.color))));
 
             graph.getElements().forEach(e -> {

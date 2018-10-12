@@ -18,7 +18,7 @@ import com.github.vogelb.tools.odem.model.Dependency;
 import com.github.vogelb.tools.odem.model.Type;
 import com.github.vogelb.tools.odem.model.TypeMap;
 import com.github.vogelb.tools.odem.model.graph.DependencyGraph;
-import com.github.vogelb.tools.odem.model.graph.GraphElement;
+import com.github.vogelb.tools.odem.model.graph.Node;
 
 /**
  * Filter given dependency containers according configurable criteria.
@@ -35,7 +35,7 @@ public class DependencyFilter {
     private String ignorePackageFilter = null;
     private String ignoreContainerFilter = null;
     private boolean includeInternalDependencies = true;
-    private Map<String, GraphElement> graphProperties = null;
+    private Map<String, Node> graphProperties = null;
     private Components components = new Components();
     private Map<String, Container> classByContainers;
     private Function<String, String> nameMapper = a -> a;
@@ -132,21 +132,21 @@ public class DependencyFilter {
      *            The graphical properties
      * @return The filter
      */
-    public DependencyFilter setGraphicProperties(GraphElement[] graphProps) {
+    public DependencyFilter setGraphicProperties(Node[] graphProps) {
         graphProperties = new HashMap<>();
-        for (GraphElement e : graphProps) {
+        for (Node e : graphProps) {
             graphProperties.put(e.name, e);
         }
         return this;
     }
 
-    private GraphElement getGraphicProperties(String name) {
-        GraphElement result = null;
+    private Node getGraphicProperties(String name) {
+        Node result = null;
         if (graphProperties != null) {
             result = graphProperties.get(name);
         }
         if (result == null) {
-            result = new GraphElement(name, null, 1);
+            result = new Node(name, null, 1);
         }
         return result;
     }
@@ -161,7 +161,7 @@ public class DependencyFilter {
 
         DependencyGraph result = new DependencyGraph();
         if (graphProperties != null) {
-            graphProperties.values().forEach(g -> result.addElement(g));
+            graphProperties.values().forEach(g -> result.addNode(g));
         }
 
         Collection<Container> sourceContainers = getFilteredContainers();
@@ -208,7 +208,7 @@ public class DependencyFilter {
 
         DependencyGraph result = new DependencyGraph();
         if (graphProperties != null) {
-            graphProperties.values().forEach(g -> result.addElement(g));
+            graphProperties.values().forEach(g -> result.addNode(g));
         }
 
         Collection<Container> sourceContainers = getFilteredContainers();

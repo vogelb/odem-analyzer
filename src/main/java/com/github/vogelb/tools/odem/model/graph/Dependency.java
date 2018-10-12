@@ -1,14 +1,19 @@
 package com.github.vogelb.tools.odem.model.graph;
 
 /**
- * The graphic representation of a dependency. 
+ * The graphic representation of a dependency.
  */
 public class Dependency {
-    public Dependency(GraphElement a, GraphElement b, long weight) {
+    public final Node a;
+    public final Node b;
+    public long weight;
+
+    public Dependency(Node a, Node b, long weight) {
         this.a = a;
         this.b = b;
         this.weight = weight;
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -17,6 +22,7 @@ public class Dependency {
         result = prime * result + ((b == null) ? 0 : b.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -38,7 +44,4 @@ public class Dependency {
             return false;
         return true;
     }
-    public final GraphElement a;
-    public final GraphElement b;
-    public long weight;
 }

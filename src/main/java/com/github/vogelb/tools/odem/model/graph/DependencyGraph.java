@@ -13,27 +13,27 @@ public class DependencyGraph {
 
     private static final Logger logger = LoggerFactory.getLogger(DependencyGraph.class);
     
-    private Map<String, GraphElement> elements = new HashMap<>();
+    private Map<String, Node> elements = new HashMap<>();
     
-    public GraphElement addElement(String name, int weight, Color color) {
-        GraphElement element = new GraphElement(name, color, weight);
+    public Node addNode(String name, int weight, Color color) {
+        Node element = new Node(name, color, weight);
         elements.put(element.name, element);
         return element;
     }
     
-    public GraphElement addElement(GraphElement element) {
+    public Node addNode(Node element) {
         elements.put(element.name, element);
         return element;
     }
     
-    public void addDependency(GraphElement a, GraphElement b, long weight) {
-    	GraphElement aa = elements.get(a.name);
+    public void addDependency(Node a, Node b, long weight) {
+    	Node aa = elements.get(a.name);
     	if (aa == null) {
-    		aa = addElement(a);
+    		aa = addNode(a);
     	}
-    	GraphElement  bb = elements.get(b.name);
+    	Node  bb = elements.get(b.name);
     	if (bb == null) {
-    		bb = addElement(b);
+    		bb = addNode(b);
     	}
         Dependency d = new Dependency(aa, bb, weight);
         Dependency existing = aa.dependencies.get(d);
@@ -45,7 +45,7 @@ public class DependencyGraph {
         logger.info("Added dependency %s -> %s [%d]", a.name, b.name, weight);
     }
     
-    public Iterable<GraphElement> getElements() {
+    public Iterable<Node> getElements() {
         return Collections.unmodifiableList(new ArrayList<>(elements.values()));
     }
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.github.vogelb.tools.odem.model.Dependency;
 import com.github.vogelb.tools.odem.model.graph.DependencyGraph;
-import com.github.vogelb.tools.odem.model.graph.GraphElement;
+import com.github.vogelb.tools.odem.model.graph.Node;
 
 /**
  * This is a sample main class demonstrating the use of the odem analyzer
@@ -21,9 +21,8 @@ public class Main {
         String ignorePackageFilter = "java.*";
 
         // Set graphic properties for package nodes
-        GraphElement[] graphProps = {
-                new GraphElement("odem", new Color(255, 153, 0), 1),
-                new GraphElement("odem.model", new Color(0, 153, 204), 1)
+        Node[] graphProps = {
+                new Node("odem", new Color(255, 153, 0), 1)
         };
         
         Components components = new Components("odem", "com.github.vogelb.tools.odem", 0)
@@ -57,6 +56,7 @@ public class Main {
         List<Dependency> guiDependencies = analyser.filter("com.github.vogelb.tools.*")
                 .includePackageFilter(packageFilter)
                 .ignorePackageFilter(ignorePackageFilter)
+                .configureComponents(components)
                 .getDependenciesFrom();
         CsvExporter.exportDependencies(guiDependencies, components, "odem-analyzer-dependencies.csv");
 
